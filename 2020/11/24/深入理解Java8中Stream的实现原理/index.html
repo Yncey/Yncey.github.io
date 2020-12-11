@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>深入理解Java8中Stream的实现原理 | Yasir'S Blog</title><meta name="author" content="Yasir"><meta name="copyright" content="Yasir"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="我们经常会使用Stream API，用起来真的很爽，但简洁的方法下面似乎隐藏着无尽的秘密，如此强大的API是如何实现的呢？ 比如Pipeline是怎么执行的，每次方法调用都会导致一次迭代吗？自动并行又是怎么做到的，线程个数是多少？本节我们学习Stream流水线的原理，这是Stream实现的关键所在。 首先回顾一下容器执行Lambda表达式的方式，以ArrayList.forEach()方法为例，具">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入理解Java8中Stream的实现原理">
+<meta property="og:url" content="http://example.com/2020/11/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java8%E4%B8%ADStream%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Yasir&#39;S Blog">
+<meta property="og:description" content="我们经常会使用Stream API，用起来真的很爽，但简洁的方法下面似乎隐藏着无尽的秘密，如此强大的API是如何实现的呢？ 比如Pipeline是怎么执行的，每次方法调用都会导致一次迭代吗？自动并行又是怎么做到的，线程个数是多少？本节我们学习Stream流水线的原理，这是Stream实现的关键所在。 首先回顾一下容器执行Lambda表达式的方式，以ArrayList.forEach()方法为例，具">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png">
+<meta property="article:published_time" content="2020-11-24T02:09:46.000Z">
+<meta property="article:modified_time" content="2020-12-09T06:19:24.355Z">
+<meta property="article:author" content="Yasir">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2020/11/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java8%E4%B8%ADStream%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="yandex-verification" content="{&quot;theme_color&quot;:{&quot;enable&quot;:true,&quot;main&quot;:&quot;#F2F2F2&quot;,&quot;paginator&quot;:&quot;#00c4b6&quot;,&quot;button_hover&quot;:&quot;#FF7242&quot;,&quot;text_selection&quot;:&quot;#00c4b6&quot;,&quot;link_color&quot;:&quot;#99a9bf&quot;,&quot;meta_color&quot;:&quot;#858585&quot;,&quot;hr_color&quot;:&quot;#A4D8FA&quot;,&quot;code_foreground&quot;:&quot;#F47466&quot;,&quot;code_background&quot;:&quot;rgba(27, 31, 35, .05)&quot;,&quot;toc_color&quot;:&quot;#00c4b6&quot;,&quot;blockquote_padding_color&quot;:&quot;#F2F2F2&quot;,&quot;blockquote_background_color&quot;:&quot;#F2F2F2&quot;}}"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":false,"highlightLang":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-12-09 14:19:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Yasir'S Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/study/"><i class="fa-fw fas fa-book-open"></i><span> 文库</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-download"></i><span> 资源中心</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/activate/"><i class="fa-fw fas fa-folder-open"></i><span> 激活</span></a></li><li><a class="site-page" href="/categories/mac/"><i class="fa-fw fas fa-folder-open"></i><span> Mac</span></a></li><li><a class="site-page" href="/categories/windows/"><i class="fa-fw fas fa-folder-open"></i><span> Windows</span></a></li></ul></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Yasir'S Blog</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/study/"><i class="fa-fw fas fa-book-open"></i><span> 文库</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-download"></i><span> 资源中心</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/activate/"><i class="fa-fw fas fa-folder-open"></i><span> 激活</span></a></li><li><a class="site-page" href="/categories/mac/"><i class="fa-fw fas fa-folder-open"></i><span> Mac</span></a></li><li><a class="site-page" href="/categories/windows/"><i class="fa-fw fas fa-folder-open"></i><span> Windows</span></a></li></ul></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">深入理解Java8中Stream的实现原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-11-24T02:09:46.000Z" title="发表于 2020-11-24 10:09:46">2020-11-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-12-09T06:19:24.355Z" title="更新于 2020-12-09 14:19:24">2020-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/study/">study</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>我们经常会使用Stream API，用起来真的很爽，但简洁的方法下面似乎隐藏着无尽的秘密，如此强大的API是如何实现的呢？</p>
+<p>比如Pipeline是怎么执行的，每次方法调用都会导致一次迭代吗？自动并行又是怎么做到的，线程个数是多少？本节我们学习Stream流水线的原理，这是Stream实现的关键所在。</p>
+<p>首先回顾一下容器执行Lambda表达式的方式，以<code>ArrayList.forEach()</code>方法为例，具体代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// ArrayList.forEach()</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">forEach</span><span class="params">(Consumer&lt;? <span class="keyword">super</span> E&gt; action)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; modCount == expectedModCount &amp;&amp; i &lt; size; i++) &#123;</span><br><span class="line">        action.accept(elementData[i]);<span class="comment">// 回调方法</span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们看到<code>ArrayList.forEach()</code>方法的主要逻辑就是一个<em>for</em>循环，在该<em>for</em>循环里不断调用<code>action.accept()</code>回调方法完成对元素的遍历。</p>
+<p>这完全没有什么新奇之处，回调方法在Java GUI的监听器中广泛使用。Lambda表达式的作用就是相当于一个回调方法，这很好理解。</p>
+<p>Stream API中大量使用Lambda表达式作为回调方法，但这并不是关键。理解Stream我们更关心的是另外两个问题：流水线和自动并行。使用Stream或许很容易写入如下形式的代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> longestStringLengthStartingWithA</span><br><span class="line">        = strings.stream()</span><br><span class="line">              .filter(s -&gt; s.startsWith(<span class="string">&quot;A&quot;</span>))</span><br><span class="line">              .mapToInt(String::length)</span><br><span class="line">              .max();</span><br></pre></td></tr></table></figure>
+
+<p>上述代码求出以字母<em>A</em>开头的字符串的最大长度，一种直白的方式是为每一次函数调用都执一次迭代，这样做能够实现功能，但效率上肯定是无法接受的。</p>
+<p>类库的实现着使用流水线（<em>Pipeline</em>）的方式巧妙的避免了多次迭代，其基本思想是在一次迭代中尽可能多的执行用户指定的操作。为讲解方便我们汇总了Stream的所有操作。</p>
+<table>
+<thead>
+<tr>
+<th>Stream操作分类</th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>中间操作(Intermediate operations)</td>
+<td>无状态(Stateless)</td>
+<td>unordered() filter() map() mapToInt() mapToLong() mapToDouble() flatMap() flatMapToInt() flatMapToLong() flatMapToDouble() peek()</td>
+</tr>
+<tr>
+<td>有状态(Stateful)</td>
+<td>distinct() sorted() sorted() limit() skip()</td>
+<td></td>
+</tr>
+<tr>
+<td>结束操作(Terminal operations)</td>
+<td>非短路操作</td>
+<td>forEach() forEachOrdered() toArray() reduce() collect() max() min() count()</td>
+</tr>
+<tr>
+<td>短路操作(short-circuiting)</td>
+<td>anyMatch() allMatch() noneMatch() findFirst() findAny()</td>
+<td></td>
+</tr>
+</tbody></table>
+<p>Stream上的所有操作分为两类：中间操作和结束操作，中间操作只是一种标记，只有结束操作才会触发实际计算。中间操作又可以分为无状态的(<em>Stateless</em>)和有状态的(<em>Stateful</em>)，无状态中间操作是指元素的处理不受前面元素的影响，而有状态的中间操作必须等到所有元素处理之后才知道最终结果。</p>
+<p>比如排序是有状态操作，在读取所有元素之前并不能确定排序结果；结束操作又可以分为短路操作和非短路操作，短路操作是指不用处理全部元素就可以返回结果，比如<em>找到第一个满足条件的元素</em>。之所以要进行如此精细的划分，是因为底层对每一种情况的处理方式不同。</p>
+<p>为了更好的理解流的中间操作和终端操作，可以通过下面的两段代码来看他们的执行过程。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IntStream.range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">   .peek(x -&gt; System.out.print(<span class="string">&quot;\nA&quot;</span> + x))</span><br><span class="line">   .limit(<span class="number">3</span>)</span><br><span class="line">   .peek(x -&gt; System.out.print(<span class="string">&quot;B&quot;</span> + x))</span><br><span class="line">   .forEach(x -&gt; System.out.print(<span class="string">&quot;C&quot;</span> + x));</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">A1B1C1</span><br><span class="line">A2B2C2</span><br><span class="line">A3B3C3</span><br></pre></td></tr></table></figure>
+
+<p>中间操作是懒惰的，也就是中间操作不会对数据做任何操作，直到遇到了最终操作。而最终操作，都是比较热情的。他们会往前回溯所有的中间操作。也就是当执行到最后的forEach操作的时候，它会回溯到它的上一步中间操作，上一步中间操作，又会回溯到上上一步的中间操作，…，直到最初的第一步。</p>
+<p>第一次forEach执行的时候，会回溯peek 操作，然后peek会回溯更上一步的limit操作，然后limit会回溯更上一步的peek操作，顶层没有操作了，开始自上向下开始执行，输出：A1B1C1 第二次forEach执行的时候，然后会回溯peek 操作，然后peek会回溯更上一步的limit操作，然后limit会回溯更上一步的peek操作，顶层没有操作了，开始自上向下开始执行，输出：A2B2C2</p>
+<p>… 当第四次forEach执行的时候，然后会回溯peek 操作，然后peek会回溯更上一步的limit操作，到limit的时候，发现limit(3)这个job已经完成，这里就相当于循环里面的break操作，跳出来终止循环。</p>
+<p>再来看第二段代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">IntStream.range(<span class="number">1</span>, <span class="number">10</span>)</span><br><span class="line">   .peek(x -&gt; System.out.print(<span class="string">&quot;\nA&quot;</span> + x))</span><br><span class="line">   .skip(<span class="number">6</span>)</span><br><span class="line">   .peek(x -&gt; System.out.print(<span class="string">&quot;B&quot;</span> + x))</span><br><span class="line">   .forEach(x -&gt; System.out.print(<span class="string">&quot;C&quot;</span> + x));</span><br></pre></td></tr></table></figure>
+
+<p>输出为：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">A1</span><br><span class="line">A2</span><br><span class="line">A3</span><br><span class="line">A4</span><br><span class="line">A5</span><br><span class="line">A6</span><br><span class="line">A7B7C7</span><br><span class="line">A8B8C8</span><br><span class="line">A9B9C9</span><br></pre></td></tr></table></figure>
+
+<p>第一次forEach执行的时候，会回溯peek操作，然后peek会回溯更上一步的skip操作，skip回溯到上一步的peek操作，顶层没有操作了，开始自上向下开始执行，执行到skip的时候，因为执行到skip，这个操作的意思就是跳过，下面的都不要执行了，也就是就相当于循环里面的continue，结束本次循环。输出：A1</p>
+<p>第二次forEach执行的时候，会回溯peek操作，然后peek会回溯更上一步的skip操作，skip回溯到上一步的peek操作，顶层没有操作了，开始自上向下开始执行，执行到skip的时候，发现这是第二次skip，结束本次循环。输出：A2</p>
+<p>…</p>
+<p>第七次forEach执行的时候，会回溯peek操作，然后peek会回溯更上一步的skip操作，skip回溯到上一步的peek操作，顶层没有操作了，开始自上向下开始执行，执行到skip的时候，发现这是第七次skip，已经大于6了，它已经执行完了skip(6)的job了。这次skip就直接跳过，继续执行下面的操作。输出：A7B7C7</p>
+<p>…直到循环结束。</p>
+<p>面试题推荐：100期面试题汇总</p>
+<h2 id="一种直白的实现方式"><a href="#一种直白的实现方式" class="headerlink" title="一种直白的实现方式"></a>一种直白的实现方式</h2><p>仍然考虑上述求最长字符串的程序，一种直白的流水线实现方式是为每一次函数调用都执一次迭代，并将处理中间结果放到某种数据结构中（比如数组，容器等）。</p>
+<p>具体说来，就是调用<code>filter()</code>方法后立即执行，选出所有以<em>A</em>开头的字符串并放到一个列表list1中，之后让list1传递给<code>mapToInt()</code>方法并立即执行，生成的结果放到list2中，最后遍历list2找出最大的数字作为最终结果。程序的执行流程如如所示：</p>
+<p><img src="https://i.loli.net/2020/11/24/DKJ23moc9dEPHsA.png" alt="Stream Pipeline"></p>
+<p>这样做实现起来非常简单直观，但有两个明显的弊端：</p>
+<ol>
+<li>迭代次数多。迭代次数跟函数调用的次数相等。</li>
+<li>频繁产生中间结果。每次函数调用都产生一次中间结果，存储开销无法接受。</li>
+</ol>
+<p>这些弊端使得效率底下，根本无法接受。如果不使用Stream API我们都知道上述代码该如何在一次迭代中完成，大致是如下形式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> longest = <span class="number">0</span>;</span><br><span class="line"><span class="keyword">for</span>(String str : strings)&#123;</span><br><span class="line">    <span class="keyword">if</span>(str.startsWith(<span class="string">&quot;A&quot;</span>))&#123;<span class="comment">// 1. filter(), 保留以A开头的字符串</span></span><br><span class="line">        <span class="keyword">int</span> len = str.length();<span class="comment">// 2. mapToInt(), 转换成长度</span></span><br><span class="line">        longest = Math.max(len, longest);<span class="comment">// 3. max(), 保留最长的长度</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>采用这种方式我们不但减少了迭代次数，也避免了存储中间结果，显然这就是流水线，因为我们把三个操作放在了一次迭代当中。只要我们事先知道用户意图，总是能够采用上述方式实现跟Stream API等价的功能，但问题是Stream类库的设计者并不知道用户的意图是什么。</p>
+<p>如何在无法假设用户行为的前提下实现流水线，是类库的设计者要考虑的问题。</p>
+<p>面试题推荐：100期面试题汇总</p>
+<h2 id="Stream流水线解决方案"><a href="#Stream流水线解决方案" class="headerlink" title="Stream流水线解决方案"></a>Stream流水线解决方案</h2><p>我们大致能够想到，应该采用某种方式记录用户每一步的操作，当用户调用结束操作时将之前记录的操作叠加到一起在一次迭代中全部执行掉。沿着这个思路，有几个问题需要解决：</p>
+<ol>
+<li>用户的操作如何记录？</li>
+<li>操作如何叠加？</li>
+<li>叠加之后的操作如何执行？</li>
+<li>执行后的结果（如果有）在哪里？</li>
+</ol>
+<h3 id="操作如何记录"><a href="#操作如何记录" class="headerlink" title="操作如何记录"></a>操作如何记录</h3><p>注意这里使用的是“*操作(operation)*”一词，指的是“Stream中间操作”的操作，很多Stream操作会需要一个回调函数（Lambda表达式），因此一个完整的操作是&lt;*数据来源，操作，回调函数*&gt;构成的三元组。</p>
+<p>Stream中使用Stage的概念来描述一个完整的操作，并用某种实例化后的<em>PipelineHelper</em>来代表Stage，将具有先后顺序的各个Stage连到一起，就构成了整个流水线。跟Stream相关类和接口的继承关系图示。</p>
+<p><img src="https://i.loli.net/2020/11/24/HR2qW49MJAe3iBm.png" alt="关系图"></p>
+<p>还有<em>IntPipeline, LongPipeline, DoublePipeline</em>没在图中画出，这三个类专门为三种基本类型（不是包装类型）而定制的，跟<em>ReferencePipeline</em>是并列关系。</p>
+<p>图中<em>Head</em>用于表示第一个Stage，即调用调用诸如<em>Collection.stream()\</em>方法产生的Stage，很显然这个Stage里不包含任何操作；*StatelessOp*和*StatefulOp*分别表示无状态和有状态的Stage，对应于无状态和有状态的中间操作。</p>
+<p>Stream流水线组织结构示意图如下：</p>
+<p><img src="https://i.loli.net/2020/11/24/vBNjQsaw68f3HzS.png" alt="Stream流水线组织结构示意图"></p>
+<p>图中通过<code>Collection.stream()</code>方法得到<em>Head</em>也就是stage0，紧接着调用一系列的中间操作，不断产生新的Stream。<strong>这些Stream对象以双向链表的形式组织在一起，构成整个流水线，由于每个Stage都记录了前一个Stage和本次的操作以及回调函数，依靠这种结构就能建立起对数据源的所有操作</strong>。这就是Stream记录操作的方式。</p>
+<h3 id="操作如何叠加"><a href="#操作如何叠加" class="headerlink" title="操作如何叠加"></a>操作如何叠加</h3><p>以上只是解决了操作记录的问题，要想让流水线起到应有的作用我们需要一种将所有操作叠加到一起的方案。你可能会觉得这很简单，只需要从流水线的head开始依次执行每一步的操作（包括回调函数）就行了。</p>
+<p>这听起来似乎是可行的，但是你忽略了前面的Stage并不知道后面Stage到底执行了哪种操作，以及回调函数是哪种形式。换句话说，只有当前Stage本身才知道该如何执行自己包含的动作。这就需要有某种协议来协调相邻Stage之间的调用关系。</p>
+<p>这种协议由<em>Sink</em>接口完成，<em>Sink</em>接口包含的方法如下表所示：</p>
+<table>
+<thead>
+<tr>
+<th>方法名</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void begin(long size)</td>
+<td>开始遍历元素之前调用该方法，通知Sink做好准备。</td>
+</tr>
+<tr>
+<td>void end()</td>
+<td>所有元素遍历完成之后调用，通知Sink没有更多的元素了。</td>
+</tr>
+<tr>
+<td>boolean cancellationRequested()</td>
+<td>是否可以结束操作，可以让短路操作尽早结束。</td>
+</tr>
+<tr>
+<td>void accept(T t)</td>
+<td>遍历元素时调用，接受一个待处理元素，并对元素进行处理。Stage把自己包含的操作和回调方法封装到该方法里，前一个Stage只需要调用当前Stage.accept(T t)方法就行了。</td>
+</tr>
+</tbody></table>
+<p>有了上面的协议，相邻Stage之间调用就很方便了，每个Stage都会将自己的操作封装到一个Sink里，前一个Stage只需调用后一个Stage的<code>accept()</code>方法即可，并不需要知道其内部是如何处理的。</p>
+<p>当然对于有状态的操作，Sink的<code>begin()</code>和<code>end()</code>方法也是必须实现的。比如Stream.sorted()是一个有状态的中间操作，其对应的Sink.begin()方法可能创建一个盛放结果的容器，而accept()方法负责将元素添加到该容器，最后end()负责对容器进行排序。</p>
+<p>对于短路操作，<code>Sink.cancellationRequested()</code>也是必须实现的，比如Stream.findFirst()是短路操作，只要找到一个元素，cancellationRequested()就应该返回<em>true</em>，以便调用者尽快结束查找。Sink的四个接口方法常常相互协作，共同完成计算任务。</p>
+<p><strong>实际上Stream API内部实现的的本质，就是如何重写Sink的这四个接口方法</strong>。</p>
+<p>有了Sink对操作的包装，Stage之间的调用问题就解决了，执行时只需要从流水线的head开始对数据源依次调用每个Stage对应的Sink.{begin(), accept(), cancellationRequested(), end()}方法就可以了。一种可能的Sink.accept()方法流程是这样的：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">accept</span><span class="params">(U u)</span></span>&#123;</span><br><span class="line">    <span class="number">1.</span> 使用当前Sink包装的回调函数处理u</span><br><span class="line">    <span class="number">2.</span> 将处理结果传递给流水线下游的Sink</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Sink接口的其他几个方法也是按照这种[处理-&gt;转发]的模型实现。</p>
+<p>下面我们结合具体例子看看Stream的中间操作是如何将自身的操作包装成Sink以及Sink是如何将处理结果转发给下一个Sink的。先看Stream.map()方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Stream.map()，调用该方法将产生一个新的Stream</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> &lt;R&gt; <span class="function">Stream&lt;R&gt; <span class="title">map</span><span class="params">(Function&lt;? <span class="keyword">super</span> P_OUT, ? extends R&gt; mapper)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> StatelessOp&lt;P_OUT, R&gt;(<span class="keyword">this</span>, StreamShape.REFERENCE,</span><br><span class="line">                                 StreamOpFlag.NOT_SORTED | StreamOpFlag.NOT_DISTINCT) &#123;</span><br><span class="line">        <span class="meta">@Override</span> <span class="comment">/*opWripSink()方法返回由回调函数包装而成Sink*/</span></span><br><span class="line">        <span class="function">Sink&lt;P_OUT&gt; <span class="title">opWrapSink</span><span class="params">(<span class="keyword">int</span> flags, Sink&lt;R&gt; downstream)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> Sink.ChainedReference&lt;P_OUT, R&gt;(downstream) &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(P_OUT u)</span> </span>&#123;</span><br><span class="line">                    R r = mapper.apply(u);<span class="comment">// 1. 使用当前Sink包装的回调函数mapper处理u</span></span><br><span class="line">                    downstream.accept(r);<span class="comment">// 2. 将处理结果传递给流水线下游的Sink</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码看似复杂，其实逻辑很简单，就是将回调函数<em>mapper</em>包装到一个Sink当中。由于Stream.map()是一个无状态的中间操作，所以map()方法返回了一个StatelessOp内部类对象（一个新的Stream），调用这个新Stream的opWripSink()方法将得到一个包装了当前回调函数的Sink。</p>
+<p>再来看一个复杂一点的例子。Stream.sorted()方法将对Stream中的元素进行排序，显然这是一个有状态的中间操作，因为读取所有元素之前是没法得到最终顺序的。抛开模板代码直接进入问题本质，sorted()方法是如何将操作封装成Sink的呢？sorted()一种可能封装的Sink代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Stream.sort()方法用到的Sink实现</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RefSortingSink</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">AbstractRefSortingSink</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> ArrayList&lt;T&gt; list;<span class="comment">// 存放用于排序的元素</span></span><br><span class="line">    RefSortingSink(Sink&lt;? <span class="keyword">super</span> T&gt; downstream, Comparator&lt;? <span class="keyword">super</span> T&gt; comparator) &#123;</span><br><span class="line">        <span class="keyword">super</span>(downstream, comparator);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">begin</span><span class="params">(<span class="keyword">long</span> size)</span> </span>&#123;</span><br><span class="line">        ...</span><br><span class="line">        <span class="comment">// 创建一个存放排序元素的列表</span></span><br><span class="line">        list = (size &gt;= <span class="number">0</span>) ? <span class="keyword">new</span> ArrayList&lt;T&gt;((<span class="keyword">int</span>) size) : <span class="keyword">new</span> ArrayList&lt;T&gt;();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">end</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        list.sort(comparator);<span class="comment">// 只有元素全部接收之后才能开始排序</span></span><br><span class="line">        downstream.begin(list.size());</span><br><span class="line">        <span class="keyword">if</span> (!cancellationWasRequested) &#123;<span class="comment">// 下游Sink不包含短路操作</span></span><br><span class="line">            list.forEach(downstream::accept);<span class="comment">// 2. 将处理结果传递给流水线下游的Sink</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span> &#123;<span class="comment">// 下游Sink包含短路操作</span></span><br><span class="line">            <span class="keyword">for</span> (T t : list) &#123;<span class="comment">// 每次都调用cancellationRequested()询问是否可以结束处理。</span></span><br><span class="line">                <span class="keyword">if</span> (downstream.cancellationRequested()) <span class="keyword">break</span>;</span><br><span class="line">                downstream.accept(t);<span class="comment">// 2. 将处理结果传递给流水线下游的Sink</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        downstream.end();</span><br><span class="line">        list = <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">accept</span><span class="params">(T t)</span> </span>&#123;</span><br><span class="line">        list.add(t);<span class="comment">// 1. 使用当前Sink包装动作处理t，只是简单的将元素添加到中间列表当中</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码完美的展现了Sink的四个接口方法是如何协同工作的：</p>
+<ol>
+<li>首先begin()方法告诉Sink参与排序的元素个数，方便确定中间结果容器的的大小；</li>
+<li>之后通过accept()方法将元素添加到中间结果当中，最终执行时调用者会不断调用该方法，直到遍历所有元素；</li>
+<li>最后end()方法告诉Sink所有元素遍历完毕，启动排序步骤，排序完成后将结果传递给下游的Sink；</li>
+<li>如果下游的Sink是短路操作，将结果传递给下游时不断询问下游cancellationRequested()是否可以结束处理。</li>
+</ol>
+<h3 id="叠加之后的操作如何执行"><a href="#叠加之后的操作如何执行" class="headerlink" title="叠加之后的操作如何执行"></a>叠加之后的操作如何执行</h3><p><img src="https://i.loli.net/2020/11/24/cd9faq7bTvUJil4.png" alt="调用关系"></p>
+<p>Sink完美封装了Stream每一步操作，并给出了[处理-&gt;转发]的模式来叠加操作。这一连串的齿轮已经咬合，就差最后一步拨动齿轮启动执行。</p>
+<p>是什么启动这一连串的操作呢？也许你已经想到了启动的原始动力就是结束操作(Terminal Operation)，一旦调用某个结束操作，就会触发整个流水线的执行。</p>
+<p>结束操作之后不能再有别的操作，所以结束操作不会创建新的流水线阶段(Stage)，直观的说就是流水线的链表不会在往后延伸了。</p>
+<p>结束操作会创建一个包装了自己操作的Sink，这也是流水线中最后一个Sink，这个Sink只需要处理数据而不需要将结果传递给下游的Sink（因为没有下游）。对于Sink的[处理-&gt;转发]模型，结束操作的Sink就是调用链的出口。</p>
+<p>我们再来考察一下上游的Sink是如何找到下游Sink的。一种可选的方案是在<em>PipelineHelper</em>中设置一个Sink字段，在流水线中找到下游Stage并访问Sink字段即可。</p>
+<p>但Stream类库的设计者没有这么做，而是设置了一个<code>Sink AbstractPipeline.opWrapSink(int flags, Sink downstream)</code>方法来得到Sink，该方法的作用是返回一个新的包含了当前Stage代表的操作以及能够将结果传递给downstream的Sink对象。为什么要产生一个新对象而不是返回一个Sink字段？</p>
+<p>这是因为使用opWrapSink()可以将当前操作与下游Sink（上文中的downstream参数）结合成新Sink。试想只要从流水线的最后一个Stage开始，不断调用上一个Stage的opWrapSink()方法直到最开始（不包括stage0，因为stage0代表数据源，不包含操作），就可以得到一个代表了流水线上所有操作的Sink，用代码表示就是这样：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AbstractPipeline.wrapSink()</span></span><br><span class="line"><span class="comment">// 从下游向上游不断包装Sink。如果最初传入的sink代表结束操作，</span></span><br><span class="line"><span class="comment">// 函数返回时就可以得到一个代表了流水线上所有操作的Sink。</span></span><br><span class="line"><span class="keyword">final</span> &lt;P_IN&gt; <span class="function">Sink&lt;P_IN&gt; <span class="title">wrapSink</span><span class="params">(Sink&lt;E_OUT&gt; sink)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">for</span> (AbstractPipeline p=AbstractPipeline.<span class="keyword">this</span>; p.depth &gt; <span class="number">0</span>; p=p.previousStage) &#123;</span><br><span class="line">        sink = p.opWrapSink(p.previousStage.combinedFlags, sink);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> (Sink&lt;P_IN&gt;) sink;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>现在流水线上从开始到结束的所有的操作都被包装到了一个Sink里，执行这个Sink就相当于执行整个流水线，执行Sink的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// AbstractPipeline.copyInto(), 对spliterator代表的数据执行wrappedSink代表的操作。</span></span><br><span class="line"><span class="keyword">final</span> &lt;P_IN&gt; <span class="function"><span class="keyword">void</span> <span class="title">copyInto</span><span class="params">(Sink&lt;P_IN&gt; wrappedSink, Spliterator&lt;P_IN&gt; spliterator)</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">if</span> (!StreamOpFlag.SHORT_CIRCUIT.isKnown(getStreamAndOpFlags())) &#123;</span><br><span class="line">        wrappedSink.begin(spliterator.getExactSizeIfKnown());<span class="comment">// 通知开始遍历</span></span><br><span class="line">        spliterator.forEachRemaining(wrappedSink);<span class="comment">// 迭代</span></span><br><span class="line">        wrappedSink.end();<span class="comment">// 通知遍历结束</span></span><br><span class="line">    &#125;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述代码首先调用wrappedSink.begin()方法告诉Sink数据即将到来，然后调用spliterator.forEachRemaining()方法对数据进行迭代，最后调用wrappedSink.end()方法通知Sink数据处理结束。逻辑如此清晰。后端技术精选公众号内回复“后端面试”，送你一份Java面试题宝典</p>
+<h3 id="执行后的结果在哪里"><a href="#执行后的结果在哪里" class="headerlink" title="执行后的结果在哪里"></a>执行后的结果在哪里</h3><p>最后一个问题是流水线上所有操作都执行后，用户所需要的结果（如果有）在哪里？首先要说明的是不是所有的Stream结束操作都需要返回结果，有些操作只是为了使用其副作用(<em>Side-effects</em>)，比如使用<code>Stream.forEach()</code>方法将结果打印出来就是常见的使用副作用的场景（事实上，除了打印之外其他场景都应避免使用副作用），对于真正需要返回结果的结束操作结果存在哪里呢？</p>
+<blockquote>
+<p>特别说明：副作用不应该被滥用，也许你会觉得在Stream.forEach()里进行元素收集是个不错的选择，就像下面代码中那样，但遗憾的是这样使用的正确性和效率都无法保证，因为Stream可能会并行执行。大多数使用副作用的地方都可以使用归约操作更安全和有效的完成。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 错误的收集方式</span></span><br><span class="line">ArrayList&lt;String&gt; results = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">stream.filter(s -&gt; pattern.matcher(s).matches())</span><br><span class="line">      .forEach(s -&gt; results.add(s));  <span class="comment">// Unnecessary use of side-effects!</span></span><br><span class="line"><span class="comment">// 正确的收集方式</span></span><br><span class="line">List&lt;String&gt;results =</span><br><span class="line">     stream.filter(s -&gt; pattern.matcher(s).matches())</span><br><span class="line">             .collect(Collectors.toList());  <span class="comment">// No side-effects!</span></span><br></pre></td></tr></table></figure>
+
+<p>回到流水线执行结果的问题上来，需要返回结果的流水线结果存在哪里呢？这要分不同的情况讨论，下表给出了各种有返回结果的Stream结束操作。</p>
+<table>
+<thead>
+<tr>
+<th>返回类型</th>
+<th>对应的结束操作</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean</td>
+<td>anyMatch() allMatch() noneMatch()</td>
+</tr>
+<tr>
+<td>Optional</td>
+<td>findFirst() findAny()</td>
+</tr>
+<tr>
+<td>归约结果</td>
+<td>reduce() collect()</td>
+</tr>
+<tr>
+<td>数组</td>
+<td>toArray()</td>
+</tr>
+</tbody></table>
+<ol>
+<li>对于表中返回boolean或者Optional的操作（Optional是存放 一个 值的容器）的操作，由于值返回一个值，只需要在对应的Sink中记录这个值，等到执行结束时返回就可以了。</li>
+<li>对于归约操作，最终结果放在用户调用时指定的容器中（容器类型通过收集器指定）。collect(), reduce(), max(), min()都是归约操作，虽然max()和min()也是返回一个Optional，但事实上底层是通过调用reduce()方法实现的。</li>
+<li>对于返回是数组的情况，毫无疑问的结果会放在数组当中。这么说当然是对的，但在最终返回数组之前，结果其实是存储在一种叫做<em>Node</em>的数据结构中的。Node是一种多叉树结构，元素存储在树的叶子当中，并且一个叶子节点可以存放多个元素。这样做是为了并行执行方便。关于Node的具体结构，我们会在下一节探究Stream如何并行执行时给出详细说明。</li>
+</ol>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>本文详细介绍了Stream流水线的组织方式和执行过程，学习本文将有助于理解原理并写出正确的Stream代码，同时打消你对Stream API效率方面的顾虑。如你所见，Stream API实现如此巧妙，即使我们使用外部迭代手动编写等价代码，也未必更加高效。</p>
+<p>注：留下本文所用的JDK版本，以便有考究癖的人考证：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> java -version</span></span><br><span class="line">java version &quot;1.8.0_101&quot;</span><br><span class="line">Java(TM) SE Runtime Environment (build 1.8.0_101-b13)</span><br><span class="line">Java HotSpot(TM) Server VM (build 25.101-b13, mixed mode)</span><br></pre></td></tr></table></figure></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Yasir</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2020/11/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java8%E4%B8%ADStream%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/">http://example.com/2020/11/24/%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3Java8%E4%B8%ADStream%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Yasir'S Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2020/11/24/Spring%E4%BA%8B%E7%89%A9%E5%A4%B1%E6%95%88%E5%8E%9F%E5%9B%A0%E6%95%B4%E7%90%86/"><img class="prev-cover" src="https://i.loli.net/2019/11/10/71wgohfPHqXRbG9.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Spring事物失效原因整理</div></div></a></div><div class="next-post pull-right"><a href="/2020/11/23/epub%E9%98%85%E8%AF%BB%E8%BD%AF%E4%BB%B6%E5%88%86%E4%BA%AB/"><img class="next-cover" src="https://i.loli.net/2019/11/10/53eTB2uiNRlXwFP.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">epub阅读软件分享</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Yasir</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yasir-yan"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E7%A7%8D%E7%9B%B4%E7%99%BD%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"><span class="toc-number">1.</span> <span class="toc-text">一种直白的实现方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Stream%E6%B5%81%E6%B0%B4%E7%BA%BF%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">Stream流水线解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E8%AE%B0%E5%BD%95"><span class="toc-number">2.1.</span> <span class="toc-text">操作如何记录</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E5%8F%A0%E5%8A%A0"><span class="toc-number">2.2.</span> <span class="toc-text">操作如何叠加</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%A0%E5%8A%A0%E4%B9%8B%E5%90%8E%E7%9A%84%E6%93%8D%E4%BD%9C%E5%A6%82%E4%BD%95%E6%89%A7%E8%A1%8C"><span class="toc-number">2.3.</span> <span class="toc-text">叠加之后的操作如何执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E5%90%8E%E7%9A%84%E7%BB%93%E6%9E%9C%E5%9C%A8%E5%93%AA%E9%87%8C"><span class="toc-number">2.4.</span> <span class="toc-text">执行后的结果在哪里</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">3.</span> <span class="toc-text">结语</span></a></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)"><img src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="oh my zsh安装配置(国内可用)"/></a><div class="content"><a class="title" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)">oh my zsh安装配置(国内可用)</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动"><img src="https://i.loli.net/2019/11/10/3wkO7fuQpgda6vz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu添加开机启动"/></a><div class="content"><a class="title" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动">Ubuntu添加开机启动</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码"><img src="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu保存git用户名和密码"/></a><div class="content"><a class="title" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码">Ubuntu保存git用户名和密码</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式"><img src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 添加软件快捷启动方式"/></a><div class="content"><a class="title" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式">Linux 添加软件快捷启动方式</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"><img src="https://i.loli.net/2019/11/10/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"/></a><div class="content"><a class="title" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）">InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）</a><time datetime="2020-12-07T01:53:46.000Z" title="发表于 2020-12-07 09:53:46">2020-12-07</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

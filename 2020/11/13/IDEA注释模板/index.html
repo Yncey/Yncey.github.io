@@ -1,0 +1,421 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IDEA自定义模板 | Yasir'S Blog</title><meta name="author" content="Yasir"><meta name="copyright" content="Yasir"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta name="description" content="IDEA自定义模板1. 自定义IDEA编辑模板变量详解(Edit Template Variables)   \作用** \描述**    \annotated(“annotation qname”)** 使用驻留在指定位置的注释创建类型符号。 例如，请参见迭代组中的活动模板。   \anonymousSuper()** 为Kotlin对象表达式建议一个超类型。   \arrayVariable(">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IDEA自定义模板">
+<meta property="og:url" content="http://example.com/2020/11/13/IDEA%E6%B3%A8%E9%87%8A%E6%A8%A1%E6%9D%BF/index.html">
+<meta property="og:site_name" content="Yasir&#39;S Blog">
+<meta property="og:description" content="IDEA自定义模板1. 自定义IDEA编辑模板变量详解(Edit Template Variables)   \作用** \描述**    \annotated(“annotation qname”)** 使用驻留在指定位置的注释创建类型符号。 例如，请参见迭代组中的活动模板。   \anonymousSuper()** 为Kotlin对象表达式建议一个超类型。   \arrayVariable(">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2019/11/10/lP3rLNUBaGtSVzc.png">
+<meta property="article:published_time" content="2020-11-13T07:09:46.000Z">
+<meta property="article:modified_time" content="2020-12-09T06:19:24.351Z">
+<meta property="article:author" content="Yasir">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2019/11/10/lP3rLNUBaGtSVzc.png"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/2020/11/13/IDEA%E6%B3%A8%E9%87%8A%E6%A8%A1%E6%9D%BF/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="yandex-verification" content="{&quot;theme_color&quot;:{&quot;enable&quot;:true,&quot;main&quot;:&quot;#F2F2F2&quot;,&quot;paginator&quot;:&quot;#00c4b6&quot;,&quot;button_hover&quot;:&quot;#FF7242&quot;,&quot;text_selection&quot;:&quot;#00c4b6&quot;,&quot;link_color&quot;:&quot;#99a9bf&quot;,&quot;meta_color&quot;:&quot;#858585&quot;,&quot;hr_color&quot;:&quot;#A4D8FA&quot;,&quot;code_foreground&quot;:&quot;#F47466&quot;,&quot;code_background&quot;:&quot;rgba(27, 31, 35, .05)&quot;,&quot;toc_color&quot;:&quot;#00c4b6&quot;,&quot;blockquote_padding_color&quot;:&quot;#F2F2F2&quot;,&quot;blockquote_background_color&quot;:&quot;#F2F2F2&quot;}}"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":false,"highlightLang":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2020-12-09 14:19:24'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Yasir'S Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/study/"><i class="fa-fw fas fa-book-open"></i><span> 文库</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-download"></i><span> 资源中心</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/activate/"><i class="fa-fw fas fa-folder-open"></i><span> 激活</span></a></li><li><a class="site-page" href="/categories/mac/"><i class="fa-fw fas fa-folder-open"></i><span> Mac</span></a></li><li><a class="site-page" href="/categories/windows/"><i class="fa-fw fas fa-folder-open"></i><span> Windows</span></a></li></ul></div></div></div></div><div id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(https://i.loli.net/2019/11/10/lP3rLNUBaGtSVzc.png)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Yasir'S Blog</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/study/"><i class="fa-fw fas fa-book-open"></i><span> 文库</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-download"></i><span> 资源中心</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/activate/"><i class="fa-fw fas fa-folder-open"></i><span> 激活</span></a></li><li><a class="site-page" href="/categories/mac/"><i class="fa-fw fas fa-folder-open"></i><span> Mac</span></a></li><li><a class="site-page" href="/categories/windows/"><i class="fa-fw fas fa-folder-open"></i><span> Windows</span></a></li></ul></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="post-info"><h1 class="post-title">IDEA自定义模板</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2020-11-13T07:09:46.000Z" title="发表于 2020-11-13 15:09:46">2020-11-13</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2020-12-09T06:19:24.351Z" title="更新于 2020-12-09 14:19:24">2020-12-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/study/">study</a></span></div><div class="meta-secondline"> <span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="IDEA自定义模板"><a href="#IDEA自定义模板" class="headerlink" title="IDEA自定义模板"></a>IDEA自定义模板</h1><h2 id="1-自定义IDEA编辑模板变量详解-Edit-Template-Variables"><a href="#1-自定义IDEA编辑模板变量详解-Edit-Template-Variables" class="headerlink" title="1. 自定义IDEA编辑模板变量详解(Edit Template Variables)"></a>1. 自定义IDEA编辑模板变量详解(Edit Template Variables)</h2><table>
+<thead>
+<tr>
+<th><strong><em>\</em>作用**</strong></th>
+<th><strong><em>\</em>描述**</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong><em>\</em>annotated(“annotation qname”)**</strong></td>
+<td>使用驻留在指定位置的注释创建类型符号。 例如，请参见迭代组中的活动模板。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>anonymousSuper()**</strong></td>
+<td>为Kotlin对象表达式建议一个超类型。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>arrayVariable()**</strong></td>
+<td>建议当前作用域中适用的所有数组变量。 例如，请参见迭代组中的活动模板。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>blockCommentEnd**</strong></td>
+<td>返回在当前语言上下文中指示块注释结束的字符。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>blockCommentStart**</strong></td>
+<td>返回在当前语言上下文中指示块注释开始的字符。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>camelCase(String)**</strong></td>
+<td>将字符串转换为camelCase。 例如，camelCase(my-text-file)、camelCase(my text file)和camelCase(my_text_file)都返回myTextFile。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>capitalize(String)**</strong></td>
+<td>将参数的第一个字母大写。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>capitalizeAndUnderscore(sCamelCaseName)**</strong></td>
+<td>将作为参数传递的CamelCase名称的所有字母大写，并在各部分之间插入下划线。例如，大写和下划线(FooBar)返回FOO_BAR。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>castToLeftSideType()**</strong></td>
+<td>将右侧表达式转换为左侧表达式类型。在迭代组中，它使用一个模板来生成raw类型和泛型集合。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>className()**</strong></td>
+<td>返回当前类的名称(展开模板的类)。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>classNameComplete()**</strong></td>
+<td>这个表达式替代了变量位置上的类名补全。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>clipboard()**</strong></td>
+<td>返回系统剪贴板的内容。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>commentEnd()**</strong></td>
+<td>返回指示当前语言上下文中注释结尾的字符。如果行注释是用当前语言定义的，则返回值为空。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>commentStart()**</strong></td>
+<td>返回指示当前语言上下文中注释开头的字符。如果行注释是用当前语言定义的，则它们的开始指示符更好。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>complete()**</strong></td>
+<td>在变量的位置调用代码完成。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>completeSmart()**</strong></td>
+<td>在变量的位置调用智能类型完成。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>componentTypeOf(<array>)**</strong></td>
+<td>返回数组的组件类型。有关示例，请参见迭代组和其他组中的活动模板。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>concat(expressions…)**</strong></td>
+<td>返回作为参数传递给函数的所有字符串的串联。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>currentPackage()**</strong></td>
+<td>返回当前包名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>date(sDate)**</strong></td>
+<td>如果没有参数，则以默认系统格式返回当前日期。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>decapitalize(sName)**</strong></td>
+<td>将参数的第一个字母替换为相应的小写字母。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>descendantClassEnum(<String>)**</strong></td>
+<td>返回指定为字符串参数的类的子级。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>enum(sCompletionString1,sCompletionString2,…)**</strong></td>
+<td>返回在扩展模板时建议完成的逗号分隔字符串列表。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>escapeString(sEscapeString)**</strong></td>
+<td>转义指定为参数的字符串。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>expectedType()**</strong></td>
+<td>返回模板扩展到的表达式的预期类型。如果模板在赋值的右部分、返回后等展开，则很有意义。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>fileName()**</strong></td>
+<td>返回当前文件的名称及其扩展名。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>fileNameWithoutExtension()**</strong></td>
+<td>返回不带扩展名的当前文件的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>firstWord(sFirstWord)**</strong></td>
+<td>返回作为参数传递的字符串的第一个字。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>groovyScript(“groovy code”, arg1)**</strong></td>
+<td>返回具有指定代码的groovy脚本。 可以将groovyscript（）函数与多个参数一起使用。第一个参数是所执行脚本的文本或包含脚本的文件的路径。下一个参数绑定到脚本中可用的_1、_2、_3、…_n变量。此外，脚本中还提供了_editor变量。此变量绑定到当前编辑器。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>guessElementType (<container>)**</strong></td>
+<td>猜测java.util.collection中存储的元素类型。为了猜测，intellij想法试图找到元素添加到容器或从容器中提取的位置。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>iterableComponentType(<ArrayOrIterable>)**</strong></td>
+<td>返回可iterable组件的类型，如数组或集合。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>iterableVariable()**</strong></td>
+<td>返回可迭代的变量的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>JsArrayVariable()**</strong></td>
+<td>返回当前javascript数组的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsClassName()**</strong></td>
+<td>返回当前javascript类的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsComponentTypeOf()**</strong></td>
+<td>返回当前javascript组件的类型。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsDefineParameter**</strong></td>
+<td>基于模块的名称，返回参数fromdefine（[“module”]、function（<parameter_in_question>&gt;））。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsMethodName()**</strong></td>
+<td>返回当前javascript方法的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsQualifiedClassName()**</strong></td>
+<td>返回当前javascript类的完整名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsSuggestIndexName()**</strong></td>
+<td>返回最常用的索引变量的建议名称：i、j、k等。当前作用域中尚未使用的名称将首先显示。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsSuggestVariableName()**</strong></td>
+<td>根据引用变量命名规则的代码样式设置，基于变量类型和初始值设定项表达式返回变量的建议名称。 例如，如果它是一个在迭代中保存元素的变量，那么intellij-idea会猜测最合理的名称，并考虑到被迭代的容器的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsSuggestDefaultVariableKind(Boolean)**</strong></td>
+<td>布尔参数确定当前上下文中是否允许常量。如果未指定参数，则允许使用常量。当模板展开时，将显示一个下拉列表，其中包含typescript和es6的var、let和const选项，以及早期javascript版本的一个var选项。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>jsSuggestImportedEntityName()**</strong></td>
+<td>根据文件名，将’import*类型的import语句的名称建议为$item$from“$module$”`或’import$item$from“$module$”。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>lineCommentStart**</strong></td>
+<td>返回在当前语言上下文中指示行注释开头的字符。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>lineNumber()**</strong></td>
+<td>返回当前行号。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>lowercaseAndDash(String)**</strong></td>
+<td>将camelcase字符串转换为小写，并插入n个破折号作为分隔符。例如，LowerCaseandDash（MyExampleName）返回我的示例名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>methodName()**</strong></td>
+<td>返回展开模板的方法的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>methodParameters()**</strong></td>
+<td>返回展开模板的方法的参数列表。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>methodReturnType()**</strong></td>
+<td>返回当前方法返回的值的类型（模板在其中展开）。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>qualifiedClassName()**</strong></td>
+<td>返回当前类的完全限定名（在其中展开模板）。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>rightSideType()**</strong></td>
+<td>用右侧表达式的类型声明左侧变量。在迭代组中，它使用一个模板来生成原始类型和泛型集合。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>snakeCase(String)**</strong></td>
+<td>将字符串转换为蛇形大小写。例如，snakecase（foo bar）返回foo_bar。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>spaceSeparated(String)**</strong></td>
+<td>将字符串转换为小写并插入空格作为分隔符。例如，spaceseparated（foo bar）返回foo bar。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>substringBefore(String,Delimiter)**</strong></td>
+<td>删除指定分隔符后的扩展名并仅返回文件名。这有助于测试文件名（例如，substringbefore（$filename$，“.”）返回component test.js中的组件测试。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>subtypes(sType)**</strong></td>
+<td>返回作为参数传递的类型的子类型。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>suggestFirstVariableName(sFirstVariableName)**</strong></td>
+<td>不代表真的，假的，这个，超级的。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>suggestIndexName()**</strong></td>
+<td>建议使用最常用的索引变量的名称：i、j、k等（第一个不在当前范围内使用的变量）。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>suggestVariableName()**</strong></td>
+<td>根据引用变量命名规则的代码样式设置，基于变量类型及其初始值设定项表达式建议变量的名称。例如，如果它是一个在迭代中保存元素的变量，那么intellij-idea会猜测最合理的名称，并考虑到要迭代的容器的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>time(sSystemTime)**</strong></td>
+<td>以指定格式返回当前系统时间。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>typeOfVariable(VAR)**</strong></td>
+<td>返回作为参数传递的变量的类型。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>underscoresToCamelCase(String)**</strong></td>
+<td>用作为参数传递的字符串中的camelcase字母替换下划线。例如，underlinestocamelcase（foo_bar）返回foo bar。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>underscoresToSpaces(sParameterWithUnderscores)**</strong></td>
+<td>用作为参数传递的字符串中的空格替换下划线。例如，underlinestospaces（foo_bar）返回foo bar。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>user()**</strong></td>
+<td>返回当前用户的名称。</td>
+</tr>
+<tr>
+<td><strong><em>\</em>variableOfType(<type>)**</strong></td>
+<td>建议可以分配给作为参数传递的类型的所有变量，例如，VababeLoFype（“java. U.L.Vector”）。如果传递一个空字符串（“”）作为参数，那么函数将建议所有变量，而不管其类型如何。</td>
+</tr>
+</tbody></table>
+<h2 id="2-方法注释"><a href="#2-方法注释" class="headerlink" title="2. 方法注释"></a>2. 方法注释</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">*</span><br><span class="line"> * 功能描述: &lt;br&gt;</span><br><span class="line"> * -    $description$</span><br><span class="line"> *       </span><br><span class="line"> $param$</span><br><span class="line"> * <span class="meta">@return</span> $<span class="keyword">return</span>$    clink$c$</span><br><span class="line"> * <span class="meta">@author</span> yyx</span><br><span class="line"> * <span class="meta">@date</span> $DATE$ $TIME$</span><br><span class="line"> */</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/11/04/52qysaSU39NOxPd.png" alt="参数截图"></p>
+<h3 id="注释中多个参数处理函数"><a href="#注释中多个参数处理函数" class="headerlink" title="注释中多个参数处理函数"></a><u>注释中多个参数处理函数</u></h3><figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">java groovyScript(<span class="string">&quot;def result=&#x27;&#x27;; def params=\&quot;$&#123;_1&#125;\&quot;.replaceAll(&#x27;[\\\\[|\\\\]|\\\\s]&#x27;, &#x27;&#x27;).split(&#x27;,&#x27;).toList(); for(i = 0; i &lt; params.size(); i++) &#123;if(i==0)&#123;result+=&#x27;* @param &#x27; + params[i] + ((i &lt; params.size() - 1) ? &#x27;\\n&#x27; : &#x27;&#x27;)&#125;else&#123;result+=&#x27;	 * @param &#x27; + params[i] + ((i &lt; params.size() - 1) ? &#x27;\\n&#x27; : &#x27;&#x27;)&#125;&#125;; return result&quot;</span>, methodParameters())</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="3-类注释"><a href="#3-类注释" class="headerlink" title="3. 类注释"></a>3. 类注释</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * $END$</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> yyx</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> $DATE$ $TIME$</span></span><br><span class="line"><span class="comment"> */</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="4-自动Resource-Autowired"><a href="#4-自动Resource-Autowired" class="headerlink" title="4. 自动Resource||Autowired"></a>4. 自动Resource||Autowired</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Resource</span></span><br><span class="line"><span class="meta">@javax</span>.annotation.Resource</span><br><span class="line"><span class="keyword">private</span> $PARAM$ $VAL$;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Autowired</span></span><br><span class="line"><span class="meta">@org</span>.springframework.beans.factory.annotation.Autowired</span><br><span class="line"><span class="keyword">private</span> $PARAM$ $VAL$;</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://i.loli.net/2020/11/04/4W8ORXmQoqawBfu.png" alt="参数处理"></p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">Yasir</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="http://example.com/2020/11/13/IDEA%E6%B3%A8%E9%87%8A%E6%A8%A1%E6%9D%BF/">http://example.com/2020/11/13/IDEA%E6%B3%A8%E9%87%8A%E6%A8%A1%E6%9D%BF/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="http://example.com" target="_blank">Yasir'S Blog</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2019/11/10/lP3rLNUBaGtSVzc.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-full"><a href="/2020/11/13/Explain%E6%89%A7%E8%A1%8C%E8%AE%A1%E5%88%92/"><img class="prev-cover" src="https://i.loli.net/2019/11/10/71wgohfPHqXRbG9.png" onerror="onerror=null;src='/img/404.jpg'"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info">Explain执行计划</div></div></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Yasir</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yasir-yan"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="card-content"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#IDEA%E8%87%AA%E5%AE%9A%E4%B9%89%E6%A8%A1%E6%9D%BF"><span class="toc-number">1.</span> <span class="toc-text">IDEA自定义模板</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%87%AA%E5%AE%9A%E4%B9%89IDEA%E7%BC%96%E8%BE%91%E6%A8%A1%E6%9D%BF%E5%8F%98%E9%87%8F%E8%AF%A6%E8%A7%A3-Edit-Template-Variables"><span class="toc-number">1.1.</span> <span class="toc-text">1. 自定义IDEA编辑模板变量详解(Edit Template Variables)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%96%B9%E6%B3%95%E6%B3%A8%E9%87%8A"><span class="toc-number">1.2.</span> <span class="toc-text">2. 方法注释</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E9%87%8A%E4%B8%AD%E5%A4%9A%E4%B8%AA%E5%8F%82%E6%95%B0%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">注释中多个参数处理函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E7%B1%BB%E6%B3%A8%E9%87%8A"><span class="toc-number">1.3.</span> <span class="toc-text">3. 类注释</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E8%87%AA%E5%8A%A8Resource-Autowired"><span class="toc-number">1.4.</span> <span class="toc-text">4. 自动Resource||Autowired</span></a></li></ol></li></ol></div></div></div><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)"><img src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="oh my zsh安装配置(国内可用)"/></a><div class="content"><a class="title" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)">oh my zsh安装配置(国内可用)</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动"><img src="https://i.loli.net/2019/11/10/3wkO7fuQpgda6vz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu添加开机启动"/></a><div class="content"><a class="title" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动">Ubuntu添加开机启动</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码"><img src="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu保存git用户名和密码"/></a><div class="content"><a class="title" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码">Ubuntu保存git用户名和密码</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式"><img src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 添加软件快捷启动方式"/></a><div class="content"><a class="title" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式">Linux 添加软件快捷启动方式</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"><img src="https://i.loli.net/2019/11/10/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"/></a><div class="content"><a class="title" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）">InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）</a><time datetime="2020-12-07T01:53:46.000Z" title="发表于 2020-12-07 09:53:46">2020-12-07</time></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

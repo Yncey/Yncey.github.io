@@ -1,0 +1,266 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Yasir'S Blog</title><meta name="author" content="Yasir"><meta name="copyright" content="Yasir"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><meta property="og:type" content="website">
+<meta property="og:title" content="Yasir&#39;S Blog">
+<meta property="og:url" content="http://example.com/index.html">
+<meta property="og:site_name" content="Yasir&#39;S Blog">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg">
+<meta property="article:author" content="Yasir">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg"><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="http://example.com/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><meta name="yandex-verification" content="{&quot;theme_color&quot;:{&quot;enable&quot;:true,&quot;main&quot;:&quot;#F2F2F2&quot;,&quot;paginator&quot;:&quot;#00c4b6&quot;,&quot;button_hover&quot;:&quot;#FF7242&quot;,&quot;text_selection&quot;:&quot;#00c4b6&quot;,&quot;link_color&quot;:&quot;#99a9bf&quot;,&quot;meta_color&quot;:&quot;#858585&quot;,&quot;hr_color&quot;:&quot;#A4D8FA&quot;,&quot;code_foreground&quot;:&quot;#F47466&quot;,&quot;code_background&quot;:&quot;rgba(27, 31, 35, .05)&quot;,&quot;toc_color&quot;:&quot;#00c4b6&quot;,&quot;blockquote_padding_color&quot;:&quot;#F2F2F2&quot;,&quot;blockquote_background_color&quot;:&quot;#F2F2F2&quot;}}"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":false,"highlightLang":false},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  ClickShowText: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  justifiedGallery: {
+    js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+    css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+var saveToLocal = {
+  set: function setWithExpiry(key, value, ttl) {
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: false,
+  isHome: true,
+  isHighlightShrink: false,
+  isToc: false,
+  postUpdate: '2020-12-11 14:15:41'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><meta name="generator" content="Hexo 5.2.0"><link rel="alternate" href="/atom.xml" title="Yasir'S Blog" type="application/atom+xml">
+</head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/study/"><i class="fa-fw fas fa-book-open"></i><span> 文库</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-download"></i><span> 资源中心</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/activate/"><i class="fa-fw fas fa-folder-open"></i><span> 激活</span></a></li><li><a class="site-page" href="/categories/mac/"><i class="fa-fw fas fa-folder-open"></i><span> Mac</span></a></li><li><a class="site-page" href="/categories/windows/"><i class="fa-fw fas fa-folder-open"></i><span> Windows</span></a></li></ul></div></div></div></div><div id="body-wrap"><header class="full_page" id="page-header" style="background-image: url(https://i.loli.net/2020/11/04/augTRpvntdlIiy5.jpg)"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">Yasir'S Blog</a></span><span id="menus"><div id="search_button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 主页</span></a></div><div class="menus_item"><a class="site-page" href="/categories/study/"><i class="fa-fw fas fa-book-open"></i><span> 文库</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fas fa-download"></i><span> 资源中心</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/activate/"><i class="fa-fw fas fa-folder-open"></i><span> 激活</span></a></li><li><a class="site-page" href="/categories/mac/"><i class="fa-fw fas fa-folder-open"></i><span> Mac</span></a></li><li><a class="site-page" href="/categories/windows/"><i class="fa-fw fas fa-folder-open"></i><span> Windows</span></a></li></ul></div></div><span class="close" id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></span></span></nav><div id="site-info"><h1 id="site-title">Yasir'S Blog</h1><div id="site-subtitle"><span id="subtitle"></span></div></div><div id="scroll-down"><i class="fas fa-angle-down scroll-down-effects"></i></div></header><main class="layout" id="content-inner"><div class="recent-posts" id="recent-posts"><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)">     <img class="post_bg" src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="oh my zsh安装配置(国内可用)"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)">oh my zsh安装配置(国内可用)</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></span></div><div class="content">oh my zsh安装配置(国内可用)安装zsh
+dnf 改为系统中软件下载工具命令
+
+1dnf install zsh
+
+
+安装oh my zsh克隆这个项目到本地(前提是你得有装git)1git clone git://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+
+创建一个zsh的配置文件注意:如果你已经有一个~/.zshrc文件的话，建议你先做备份。使用以下命令
+1cp ~/.zshrc ~/.zshrc.orig
+
+然后开始创建zsh的配置文件
+1cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+
+设置zsh为你的默认的shell1chsh -s /bin/zsh
+
+重启并开始使用你的zsh (打开一个新的终端窗口便可…)oh-my-zsh皮肤https://github.com/romkatv/powerlevel10k
+自动补全插件下载 incr 自动补全插件 http://mimosa-pudica.net/src/incr-0.2.zsh 将插件放在 oh ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动">     <img class="post_bg" src="https://i.loli.net/2019/11/10/3wkO7fuQpgda6vz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu添加开机启动"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动">Ubuntu添加开机启动</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></span></div><div class="content">Ubuntu添加开机启动
+以Shadowsocks为例添加软件开机启动项
+
+
+运行terminal
+1gnome-session-properties
+
+
+
+查找软件位置
+1whereis ss-qt
+
+添加 /usr/bin/ss-qt5  就能开机启动你的Shadowsocks-qt5  如果其他程序的话  你也可以在 /usr/bin/  目录下面找到，然后使用上面的命令添加就好了
+
+
+
+</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码">     <img class="post_bg" src="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu保存git用户名和密码"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码">Ubuntu保存git用户名和密码</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></span></div><div class="content">
+如何在Ubuntu下解决Git保存用户名和密码呢？
+
+打开Git 配置文件,该文件中保存着所有的配置信息1vim ~/.gitconfig
+
+修改配置文件，添加下面这一行。12[credential]	helper = store
+
+
+
+记住密码helper = store #用来保存密码,提交一次会自动记住 
+密码保存一个小时helper = cache – timeout 3600 # 密码只保存一个小时
+</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式">     <img class="post_bg" src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 添加软件快捷启动方式"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式">Linux 添加软件快捷启动方式</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></span></div><div class="content">
+拿linux下的IntelliJ IDEA举个例子，其安装以后，启动方式为软件bin目录下的一个sh文件，这时候每次打开需要从文件管理器查找那个sh文件并执行，十分麻烦，为什么不能像其他软件一样有一个在菜单中的应用图片呢？
+
+下面我们来为其创建一个链接。
+跳转到/usr/share/applications1cd /usr/share/applications
+
+编辑这个文件1sudo gedit IntelliJ-IDEA.desktop
+
+添加以下内容12345678[Desktop Entry]Version=1.0Type=ApplicationName=IntelliJ IDEAIcon=/usr/local/idea-IU-203.5981.155/bin/idea.pngExec=sh /usr/local/idea-IU-203.5981.155/bin/idea.shMimeType=application/x-py;Name[en_US]=IntelliJ IDEA
+
+注意Icon和Exec的路径要和软件中sh文件和图标文件对应
+4）此时在软件菜单中已经能够看到启 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）">     <img class="post_bg" src="https://i.loli.net/2019/11/10/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）">InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-07T01:53:46.000Z" title="发表于 2020-12-07 09:53:46">2020-12-07</time></span></div><div class="content">InnoDB引擎有几个重点特性，为其带来了更好的性能和可靠性：
+
+插入缓冲（Insert Buffer）
+
+两次写（Double Write）
+
+自适应哈希索引（Adaptive Hash Index）
+
+异步IO（Async IO）
+
+刷新邻接页（Flush Neighbor Page）
+
+
+自适应哈希索引（Adaptive Hash Index）定义  InnoDB本身不支持哈希索引，所有索引检索都走B树，Adaptive Hash index可以认为是“索引的索引”
+  （Btree上的”索引”）。当对某个页面访问次数满足一定条件会将页面地址存于Hash表，下次查询可以非常快速的找到页面不需要Btree去查。
+  （哈希索引：哈希索引就是采用一定的哈希算法，把键值换算成新的哈希值，检索时不需要类似B+树那样从根节点到叶子节点逐级查找，只需一次哈希算法即可立刻定位到相应的位置，速度非常快。）
+  AHI的目的是根据用户提供的查询条件加速定位到叶子节点，如果有固定的查询pattern，都可以通过AHI受益，特别是Btree深度比较大的时候。
+自适应哈希索引 （AHI） 是 InnoD ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/12/03/Redis%20%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A8%E8%8D%90/" title="Redis 客户端推荐">     <img class="post_bg" src="https://i.loli.net/2019/11/10/egVhFWopA5mP2Hk.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Redis 客户端推荐"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/03/Redis%20%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%8E%A8%E8%8D%90/" title="Redis 客户端推荐">Redis 客户端推荐</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-03T03:09:46.000Z" title="发表于 2020-12-03 11:09:46">2020-12-03</time></span></div><div class="content">日常开发过程中，项目常常都会使用Redis来做缓存或者Session服务器，为了更直观方便，开发者常常会使用一些可视化工具，如 Redis Desktop Manager、Redis Clent等，但界面UI做得不尽人意，作为当今时代，对软件的UI还是有所期待的，今天给大家分享一款，高颜值、功能强大的Redis客户端工具
+Another Redis Desktop Managergitee开源地址：AnotherRedisDesktopManager: Github国内镜像，供下载使用，有问题可移步到 (gitee.com)
+github开源地址：qishibo/AnotherRedisDesktopManager: 🚀🚀🚀A faster, better and more stable redis desktop manager, compatible with Linux, windows, mac. What’s more, it won’t crash when loading a large number of keys. (github.com)
+一个更快、更好、更稳 ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/12/03/2.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E4%B8%A4%E6%AC%A1%E5%86%99%EF%BC%88Double%20Write%EF%BC%89/" title="InnoDB引擎之-两次写（Double Write）">     <img class="post_bg" src="https://i.loli.net/2019/11/10/egVhFWopA5mP2Hk.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB引擎之-两次写（Double Write）"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/03/2.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E4%B8%A4%E6%AC%A1%E5%86%99%EF%BC%88Double%20Write%EF%BC%89/" title="InnoDB引擎之-两次写（Double Write）">InnoDB引擎之-两次写（Double Write）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-03T02:00:46.000Z" title="发表于 2020-12-03 10:00:46">2020-12-03</time></span></div><div class="content">InnoDB引擎有几个重点特性，为其带来了更好的性能和可靠性：
+
+插入缓冲（Insert Buffer）
+两次写（Double Write）
+自适应哈希索引（Adaptive Hash Index）
+异步IO（Async IO）
+刷新邻接页（Flush Neighbor Page）
+
+经典Partial page write问题介绍double write之前我们有必要了解partial page write（部分页失效）。
+InnoDB的Page Size一般是16KB，其数据校验也是针对这16KB来计算的，将数据写入到磁盘是以Page为单位进行操作的。我们知道，由于文件系统对一次大数据页（例如InnoDB的16KB）大多数情况下不是原子操作，这意味着如果服务器宕机了，可能只做了部分写入。16K的数据，写入4K时，发生了系统断电/os crash ，只有一部分写是成功的，这种情况下就是partial page write问题。
+我们一般可能会想到，如果发生写失效，MySQL可以根据redo log进行恢复。这是一个办法，但是必须清楚地认识到，redo log中记录的是对页的物理修改， ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/12/01/1.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E6%8F%92%E5%85%A5%E7%BC%93%E5%86%B2%EF%BC%88Insert%20Buffer%EF%BC%89/" title="InnoDB引擎之-插入缓冲（Insert Buffer）">     <img class="post_bg" src="https://i.loli.net/2019/11/10/T7Mu8Aod3egmC4Q.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB引擎之-插入缓冲（Insert Buffer）"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/12/01/1.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E6%8F%92%E5%85%A5%E7%BC%93%E5%86%B2%EF%BC%88Insert%20Buffer%EF%BC%89/" title="InnoDB引擎之-插入缓冲（Insert Buffer）">InnoDB引擎之-插入缓冲（Insert Buffer）</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-12-01T03:09:46.000Z" title="发表于 2020-12-01 11:09:46">2020-12-01</time></span></div><div class="content">InnoDB引擎之-插入缓冲（Insert Buffer）InnoDB引擎有几个重点特性，为其带来了更好的性能和可靠性：
+
+插入缓冲（Insert Buffer）
+两次写（Double Write）
+自适应哈希索引（Adaptive Hash Index）
+异步IO（Async IO）
+刷新邻接页（Flush Neighbor Page）
+
+今天主题就是 插入缓冲（Insert Buffer）,由于InnoDB引擎底层数据存储结构式B+树，对于索引又有聚集索引和非聚集索引。
+在进行数据插入时必然会引起索引的变化，聚集索引一般都是递增有序的。非聚集索引就不一定是什么数据了，其离散性导致了在插入时结构的不断变化，从而导致插入性能降低。
+为了解决非聚集索引插入性能的问题，InnoDB引擎 创造了Insert Buffer。
+Insert Buffer 存储
+上图可能大家会认为Insert Buffer 就是InnoDB 缓冲池的一个组成部分。
+
+重点：其实对也不对，InnoDB 缓冲池确实包含了Insert Buffer的信息，但Insert Buffer 和数据页一样，也是物理存在的（以B ...</div></div></div><div class="recent-post-item"><div class="post_cover left_radius"><a href="/2020/11/25/SQL%20%E8%AF%AD%E5%8F%A5%E4%BC%98%E5%8C%96%E6%95%B4%E7%90%86/" title="SQL 语句优化整理">     <img class="post_bg" src="https://i.loli.net/2019/11/10/3wkO7fuQpgda6vz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SQL 语句优化整理"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/11/25/SQL%20%E8%AF%AD%E5%8F%A5%E4%BC%98%E5%8C%96%E6%95%B4%E7%90%86/" title="SQL 语句优化整理">SQL 语句优化整理</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-11-25T05:09:46.000Z" title="发表于 2020-11-25 13:09:46">2020-11-25</time></span></div><div class="content">为了提高 SQL 查询效率，我们都会采取一切 SQL 语句的优化。
+1对查询进行优化，应尽量避免全表扫描，首先应考虑在 where 及 order by 涉及的列上建立索引。
+2应尽量避免在 where 子句中使用!=或&lt;&gt;操作符，否则将引擎放弃使用索引而进行全表扫描。
+3应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描，如：
+1select id from t where num is null
+
+可以在num上设置默认值0，确保表中num列没有null值，然后这样查询：
+1select id from t where num=0
+
+4应尽量避免在 where 子句中使用 or 来连接条件，否则将导致引擎放弃使用索引而进行全表扫描，如：
+1select id from t where num=10 or num=20
+
+可以这样查询：
+123select id from t where num=10union allselect id from t where num=20
+
+5下面的查询也将导致全表扫描：
+1sele ...</div></div></div><div class="recent-post-item"><div class="post_cover right_radius"><a href="/2020/11/24/java%E7%9A%84%E4%BC%98%E9%9B%85%E5%81%9C%E6%9C%BA!!!/" title="java的优雅停机!!!">     <img class="post_bg" src="https://i.loli.net/2019/11/10/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="java的优雅停机!!!"></a></div><div class="recent-post-info"><a class="article-title" href="/2020/11/24/java%E7%9A%84%E4%BC%98%E9%9B%85%E5%81%9C%E6%9C%BA!!!/" title="java的优雅停机!!!">java的优雅停机!!!</a><div class="article-meta-wrap"><span class="post-meta-date"><i class="far fa-calendar-alt"></i><span class="article-meta-label">发表于</span><time datetime="2020-11-24T03:09:46.000Z" title="发表于 2020-11-24 11:09:46">2020-11-24</time></span></div><div class="content">优雅停机，就是在要关闭服务之前，不是立马全部关停，而是做好一些善后操作，比如：关闭线程、释放连接资源等。
+再比如，就是不会让调用方的请求处理了一增，一下就中断了。而处理完本次后，再停止服务。
+Java语言中，我们可以通过
+1Runtime.getRuntime().addShutdownHook();
+
+方法来注册钩子，以保证程序平滑退出。（其他语言也类似）
+来个栗子:
+12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758/**     * 使用线程池处理任务     */    public static ExecutorService executorService = Executors.newCachedThreadPool();    public static void main(String[] args) &#123;        //假设有5个线程需要执行任务        for (int i = 0;  ...</div></div></div><nav id="pagination"><div class="pagination"><span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fas fa-chevron-right fa-fw"></i></a></div></nav></div><div class="aside_content" id="aside_content"><div class="card-widget card-info"><div class="card-content"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://i.loli.net/2020/11/04/NOYMJbKtxVSUy5T.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">Yasir</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">25</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">5</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Yasir-yan"><i class="fab fa-github"></i><span>Follow Me</span></a></div></div><div class="sticky_layout"><div class="card-widget card-recent-post"><div class="card-content"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)"><img src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="oh my zsh安装配置(国内可用)"/></a><div class="content"><a class="title" href="/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/" title="oh my zsh安装配置(国内可用)">oh my zsh安装配置(国内可用)</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动"><img src="https://i.loli.net/2019/11/10/3wkO7fuQpgda6vz.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu添加开机启动"/></a><div class="content"><a class="title" href="/2020/12/11/Ubuntu%20%E6%B7%BB%E5%8A%A0%E5%BC%80%E6%9C%BA%E5%90%AF%E5%8A%A8/" title="Ubuntu添加开机启动">Ubuntu添加开机启动</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码"><img src="https://i.loli.net/2019/11/10/rJbFpE65tmxPv7R.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Ubuntu保存git用户名和密码"/></a><div class="content"><a class="title" href="/2020/12/11/Git%E4%BF%9D%E5%AD%98%E7%94%A8%E6%88%B7%E5%90%8D%E5%92%8C%E5%AF%86%E7%A0%81/" title="Ubuntu保存git用户名和密码">Ubuntu保存git用户名和密码</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式"><img src="https://i.loli.net/2019/11/10/bEJsXxewpOGuRD8.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Linux 添加软件快捷启动方式"/></a><div class="content"><a class="title" href="/2020/12/11/Linux%20%E6%B7%BB%E5%8A%A0%E8%BD%AF%E4%BB%B6%E5%BF%AB%E6%8D%B7%E5%90%AF%E5%8A%A8%E6%96%B9%E5%BC%8F/" title="Linux 添加软件快捷启动方式">Linux 添加软件快捷启动方式</a><time datetime="2020-12-11T03:09:46.000Z" title="发表于 2020-12-11 11:09:46">2020-12-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"><img src="https://i.loli.net/2019/11/10/gcnavZbmepS8d4u.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）"/></a><div class="content"><a class="title" href="/2020/12/07/3.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E8%87%AA%E9%80%82%E5%BA%94%E5%93%88%E5%B8%8C%E7%B4%A2%E5%BC%95%EF%BC%88Adaptive%20Hash%20Index%EF%BC%89/" title="InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）">InnoDB引擎之-自适应哈希索引（Adaptive Hash Index）</a><time datetime="2020-12-07T01:53:46.000Z" title="发表于 2020-12-07 09:53:46">2020-12-07</time></div></div></div></div></div><div class="card-widget card-archives"><div class="card-content"><div class="item-headline"><i class="fas fa-archive"></i><span>归档</span></div><ul class="card-archive-list"><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/12/"><span class="card-archive-list-date">十二月 2020</span><span class="card-archive-list-count">8</span></a></li><li class="card-archive-list-item"><a class="card-archive-list-link" href="/archives/2020/11/"><span class="card-archive-list-date">十一月 2020</span><span class="card-archive-list-count">17</span></a></li></ul></div></div><div class="card-widget card-webinfo"><div class="card-content"><div class="item-headline"><i class="fas fa-chart-line"></i><span>网站资讯</span></div><div class="webinfo"><div class="webinfo-item"><div class="item-name">文章数目 :</div><div class="item-count">25</div></div><div class="webinfo-item"><div class="item-name">本站访客数 :</div><div class="item-count" id="busuanzi_value_site_uv"></div></div><div class="webinfo-item"><div class="item-name">本站总访问量 :</div><div class="item-count" id="busuanzi_value_site_pv"></div></div><div class="webinfo-item"><div class="item-name">最后更新时间 :</div><div class="item-count" id="last-push-date" data-lastPushDate="2020-12-11T06:15:41.442Z"></div></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog"></i></button><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a target="_blank" rel="noopener" href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></div></body></html>

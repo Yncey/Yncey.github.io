@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://example.com/2021/01/19/4.InnoDB%E5%BC%95%E6%93%8E%E4%B9%8B-%E5%BC%82%E6%AD%A5IO%EF%BC%88Async%20IO%EF%BC%89/</loc>
+    
+    <lastmod>2021-01-19</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://example.com/2020/12/11/oh%20my%20zsh%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE(%E5%9B%BD%E5%86%85%E5%8F%AF%E7%94%A8)/</loc>
     
     <lastmod>2020-12-11</lastmod>
@@ -37,7 +44,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/tags/index.html</loc>
+    <loc>http://example.com/categories/index.html</loc>
     
     <lastmod>2020-12-09</lastmod>
     
@@ -58,7 +65,7 @@
   </url>
   
   <url>
-    <loc>http://example.com/categories/index.html</loc>
+    <loc>http://example.com/tags/index.html</loc>
     
     <lastmod>2020-12-09</lastmod>
     
@@ -193,7 +200,7 @@
 
   <url>
     <loc>http://example.com/</loc>
-    <lastmod>2020-12-11</lastmod>
+    <lastmod>2021-01-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -203,35 +210,35 @@
   
   <url>
     <loc>http://example.com/categories/study/</loc>
-    <lastmod>2020-12-11</lastmod>
+    <lastmod>2021-01-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/mac/</loc>
-    <lastmod>2020-12-11</lastmod>
+    <lastmod>2021-01-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/linux/</loc>
-    <lastmod>2020-12-11</lastmod>
+    <lastmod>2021-01-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/activate/</loc>
-    <lastmod>2020-12-11</lastmod>
+    <lastmod>2021-01-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>http://example.com/categories/windows/</loc>
-    <lastmod>2020-12-11</lastmod>
+    <lastmod>2021-01-19</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
